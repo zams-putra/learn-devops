@@ -14,6 +14,8 @@ with this file structure
 \---seed
         data.js
 ```
+
+### Opsi - 1
 with this simple Dockerfile cuy 
 ```Dockerfile
 FROM node:20
@@ -23,6 +25,21 @@ RUN npm install
 RUN node seed/data.js
 CMD [ "npm" , "start"]
 ```
+
+### Opsi - 2
+step lanjutan, kasih permission and set user ke app 
+
+```Dockerfile
+FROM node:20
+WORKDIR /app
+COPY . .
+RUN npm install
+RUN node seed/data.js
+RUN adduser app && chown -R app:app /app
+USER app
+CMD [ "npm" , "start"]
+```
+
 - Build Dockerfile nya
 
 ```bash
