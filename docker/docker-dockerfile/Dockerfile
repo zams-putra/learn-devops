@@ -1,7 +1,7 @@
 FROM node:20
 WORKDIR /app
 COPY package*.json ./
-RUN npm install
+RUN npm ci
 COPY . .
 RUN adduser app && chown -R app:app /app
 COPY entrypoint.sh /usr/local/bin/entrypoint.sh
