@@ -39,6 +39,45 @@ RUN adduser app && chown -R app:app /app
 USER app
 CMD [ "npm" , "start"]
 ```
+### Opsi - 3
+biar lebih optimize lagi, dia nanti kalau gonta ganti code di server.js misal, nah dia udah dalam keadaan install semua package kalau begini tuh
+
+```Dockerfile
+FROM node:20
+WORKDIR /app
+COPY package*.json ./
+RUN npm install
+COPY . .
+RUN node seed/data.js
+RUN adduser app && chown -R app:app /app
+USER app
+CMD [ "npm" , "start"]
+```
+### Opsi - 4
+biar lebih mantep lagi, kita buat entrypoint.sh buat naruh beberapa run command nya ga dari Dockerfile
+- Dockerfile
+```Dockerfile
+FROM node:20
+WORKDIR /app
+COPY package*.json ./
+RUN npm install
+COPY . .
+RUN adduser app && chown -R app:app /app
+COPY entrypoint.sh /usr/local/bin/entrypoint.sh
+RUN chmod +x /usr/local/bin/entrypoint.sh
+USER app
+ENTRYPOINT [ "entrypoint.sh" ]
+CMD [ "npm" , "start"]
+```
+kenapa kok run chmod nya di atas user app, ya kalo di bawah kan doi bukan root cug udah jadi app duluan masa mau nge chmod file di usr local
+- entrypoint.sh
+```sh
+#!/bin/sh
+
+echo "nge seed db dulu lah biar aman sentosa"
+node seed/data.js
+exec "$@"
+```
 
 - Build Dockerfile nya
 
