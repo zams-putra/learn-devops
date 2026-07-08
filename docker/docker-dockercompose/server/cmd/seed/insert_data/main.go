@@ -1,4 +1,4 @@
-package insertdata
+package main
 
 import (
 	"database/sql"
@@ -9,7 +9,7 @@ import (
 )
 
 func main() {
-	db, err := sql.Open("sqlite3", "./data.db")
+	db, err := sql.Open("sqlite", "./data.db")
 	if err != nil {
 		log.Fatal(err)
 	}

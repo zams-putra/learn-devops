@@ -1,4 +1,4 @@
-package createtable
+package main
 
 import (
 	"database/sql"
@@ -8,7 +8,7 @@ import (
 )
 
 func main() {
-	db, err := sql.Open("sqlite3", "./data.db")
+	db, err := sql.Open("sqlite", "./data.db")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -20,12 +20,19 @@ func main() {
 			password TEXT NOT NULL,
 			isAdmin INTEGER NOT NULL
 		);
+
+		CREATE TABLE IF NOT EXISTS roasting (
+			id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+			roaster TEXT NOT NULL,
+			comment TEXT NOT NULL,
+			created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+		);
 	`
 
 	_, err = db.Exec(sqlStatement)
 	if err != nil {
 		log.Fatal(err)
 	}
-	log.Println("Tables 'users' dah dibuat tuh")
+	log.Println("Tables 'users' dan 'roasting' dah dibuat tuh")
 
 }
