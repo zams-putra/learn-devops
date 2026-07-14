@@ -79,6 +79,7 @@ node seed/data.js
 exec "$@"
 ```
 
+### How to played
 - Build Dockerfile nya
 
 ```bash
@@ -194,3 +195,10 @@ networks:
   cave-net:
     driver: bridge
 ```
+### How to played
+- up the docker compose
+```bash
+docker compose up --build 
+```
+- access localhost:80
+- and play
