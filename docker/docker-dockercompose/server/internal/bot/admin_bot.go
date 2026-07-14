@@ -16,24 +16,31 @@ type AdminBot struct {
 
 func (b *AdminBot) visit() {
 	log.Println("[bot] admin visiting comment page")
-	ctx, cancel := chromedp.NewContext(context.Background())
-	defer cancel()
 
-	ctx, cancel = context.WithTimeout(ctx, 15*time.Second)
-	defer cancel()
+	opts := append(chromedp.DefaultExecAllocatorOptions[:],
+		chromedp.Flag("headless", true),
+		chromedp.Flag("no-sandbox", true),
+		chromedp.Flag("disable-gpu", true),
+		chromedp.Flag("disable-dev-shm-usage", true),
+		chromedp.Flag("disable-setuid-sandbox", true),
+	)
+
+	allocCtx, cancelAlloc := chromedp.NewExecAllocator(context.Background(), opts...)
+	defer cancelAlloc()
+
+	ctx, cancelCtx := chromedp.NewContext(allocCtx)
+	defer cancelCtx()
+
+	ctx, cancelTimeout := context.WithTimeout(ctx, 15*time.Second)
+	defer cancelTimeout()
 
 	err := chromedp.Run(ctx,
-
 		network.Enable(),
 
-		// dev
-		// chromedp.Navigate("http://localhost:5173"),
-
-		// prods
-		chromedp.Navigate("http://localhost:80"),
+		chromedp.Navigate("http://client:80"),
 
 		chromedp.ActionFunc(func(ctx context.Context) error {
-			return network.SetCookie("kuki", b.AdminCookie).WithDomain("localhost").WithPath("/").Do(ctx)
+			return network.SetCookie("kuki", b.AdminCookie).WithDomain("client").WithPath("/").Do(ctx)
 		}),
 
 		chromedp.Navigate(b.TargetURL),

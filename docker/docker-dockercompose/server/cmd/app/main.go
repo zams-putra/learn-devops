@@ -60,7 +60,7 @@ func main() {
 	// prods
 	adminBot := &bot.AdminBot{
 		AdminCookie: adminToken,
-		TargetURL:   "http://localhost:80/roasting",
+		TargetURL:   "http://client:80/roasting",
 	}
 	go adminBot.Start()
 
