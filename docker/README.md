@@ -1,4 +1,9 @@
-# Masterchef - Dockerfile
+# Dockerfile
+## Masterchef - Dockerfile
+
+## Desc 
+API pentest lab, design RBAC lah
+
 - baca2 dari sini: https://docs.docker.com/get-started/docker-concepts/building-images/writing-a-dockerfile/
 
 with this file structure
@@ -96,10 +101,14 @@ curl 127.0.0.1:5000/api
 ```
 
 
-
-# Cave React App - Dockerfile (Multi-Stage Dockerfile)
+# Docker Compose
+## Cave React App - Dockerfile (Multi-Stage Dockerfile) 
 buat nge build frontend app, misal ini react app isinya
 implement npm build, lalu deploy ke nginx
+
+## Desc 
+Web exploit lab, attack surface: xss, jwt attack, lfi
+
 - Dockerfile client
 
 ```Dockerfile
@@ -117,6 +126,27 @@ COPY nginx.conf /etc/nginx/conf.d/default.conf
 EXPOSE 80
 CMD [ "nginx", "-g", "daemon off;" ]
 ```
+- setup nginx.conf nya begini 
+```conf
+server {
+    listen 80;
+    root /usr/share/nginx/html;
+    index index.html;
+
+    location /api/ {
+        proxy_pass http://server:8080;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+
+    location / {
+        try_files $uri $uri/ /index.html;
+    }
+}
+```
+## Cave Go Server App - Dockerfile (Multi-Stage Dockerfile with entrypoint) 
 buat ngebuild backend app, misal ini golang app isinya implement go build, lalu deploy ke debian server, also implement chromium soalnya di go mod nya ada package chrome buat xss
 - /server/entrypoint.sh nya gini 
 ```bash
